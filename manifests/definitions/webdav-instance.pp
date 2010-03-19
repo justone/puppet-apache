@@ -16,6 +16,12 @@ define apache::webdav::instance ($ensure=present, $vhost, $purge='5', $directory
         unless => "test -d $davdir",
         require => File["/var/www/${vhost}/conf/webdav${clean_name}.conf"],
       }
+      file {"Ensuring perms on dav basedir for ${name}":
+        ensure => present,
+        owner  => 'www-data',
+        path => $davdir,
+        require => Exec["Creating dav basedir for ${name}"],
+      }
     }
     'absent' :{
       exec {"Removing dav basedir for ${name}":
